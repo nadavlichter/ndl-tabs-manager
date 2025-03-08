@@ -280,17 +280,16 @@ input:checked + .toggle-slider:before {
 
 /* Recent Tab Indicators */
 .tab-item.recent-1 {
-  border-bottom: 3px solid var(--primary-color);
+  position: relative;
+  background-color: var(--hover-color);
+  border-left: 4px solid var(--primary-color);
 }
 
 .tab-item.recent-2 {
-  border-bottom: 2px solid var(--primary-color);
-  opacity: 0.8;
-}
-
-.tab-item.recent-3 {
-  border-bottom: 1px solid var(--primary-color);
-  opacity: 0.6;
+  position: relative;
+  background-color: var(--surface-color);
+  border-left: 2px solid var(--primary-color);
+  opacity: 0.9;
 }
 
 /* Group Management */

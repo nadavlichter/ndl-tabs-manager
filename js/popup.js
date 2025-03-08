@@ -144,6 +144,7 @@ async function loadTabs() {
     try {
       const data = await chrome.storage.local.get('recentTabs');
       recentTabs = data.recentTabs || [];
+      console.log('Loaded recent tabs:', recentTabs);
     } catch (storageError) {
       console.warn('Could not load recent tabs from storage:', storageError);
     }
@@ -153,6 +154,7 @@ async function loadTabs() {
       const recentIndex = recentTabs.indexOf(tab.id);
       if (recentIndex !== -1 && recentIndex < 3) {
         tab.recentIndex = recentIndex + 1;
+        console.log('Marked tab as recent:', tab.id, 'index:', recentIndex + 1, 'title:', tab.title);
       }
     });
 
@@ -256,7 +258,7 @@ function sortTabsByDomain(tabs) {
  */
 function displayTabGroup(group, tabs) {
   const groupElement = document.createElement('div');
-  groupElement.className = 'tab-group';
+  groupElement.className = 'tab-group expanded';
   groupElement.innerHTML = `
     <div class="tab-group-header">
       <div class="tab-group-title">
@@ -293,7 +295,7 @@ function displayTabGroup(group, tabs) {
  */
 function displayUngroupedTabs(tabs) {
   const groupElement = document.createElement('div');
-  groupElement.className = 'tab-group';
+  groupElement.className = 'tab-group expanded';
   groupElement.innerHTML = `
     <div class="tab-group-header">
       <div class="tab-group-title">

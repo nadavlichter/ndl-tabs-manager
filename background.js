@@ -6,7 +6,7 @@
 // Default settings
 const DEFAULT_SETTINGS = {
   autoGroupEnabled: true,
-  recentTabsCount: 3,
+  recentTabsCount: 2,
   theme: 'system',
   userGroups: []
 };
@@ -242,19 +242,23 @@ async function updateRecentTabs(tabId) {
 
   // Add to the front of the recent tabs
   recentTabs.unshift(tabId);
+  console.log('Added tab to recent tabs:', tabId);
 
   // Get settings to check how many recent tabs to track
   const settings = await loadSettings();
-  const count = settings.recentTabsCount || 3;
+  const count = settings.recentTabsCount || 2;  // Default to 2 if not set
+  console.log('Recent tabs count setting:', count);
 
   // Keep recent tabs at the specified size
   if (recentTabs.length > count) {
     recentTabs = recentTabs.slice(0, count);
   }
+  console.log('Current recent tabs:', recentTabs);
 
   // Store recent tabs in storage for the popup to access
   try {
     await chrome.storage.local.set({ recentTabs });
+    console.log('Saved recent tabs to storage');
   } catch (error) {
     console.error('Error saving recent tabs to storage:', error);
   }
