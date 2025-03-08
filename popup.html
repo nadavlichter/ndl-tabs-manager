@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TabCur - Advanced Tab Manager</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>TabCur</h1>
+      <div class="header-controls">
+        <button id="settings-btn" class="icon-btn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13.75C12.0711 13.75 13.75 12.0711 13.75 10C13.75 7.92893 12.0711 6.25 10 6.25C7.92893 6.25 6.25 7.92893 6.25 10C6.25 12.0711 7.92893 13.75 10 13.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16.25 10C16.25 10.3315 16.2284 10.6577 16.1887 10.9741L18.2137 12.5741C18.3896 12.7241 18.4427 12.9699 18.3427 13.1783L16.7427 16.0699C16.6427 16.2783 16.4177 16.3866 16.1927 16.3199L13.8427 15.6199C13.3427 16.0033 12.7844 16.3116 12.1844 16.5366L11.8177 18.9699C11.7844 19.1949 11.5927 19.3699 11.3677 19.3699H8.16772C7.94272 19.3699 7.75105 19.1949 7.71772 18.9699L7.35105 16.5366C6.75105 16.3116 6.19272 16.0033 5.69272 15.6199L3.34272 16.3199C3.11772 16.3866 2.89272 16.2783 2.79272 16.0699L1.19272 13.1783C1.09272 12.9699 1.14589 12.7241 1.32172 12.5741L3.34672 10.9741C3.30705 10.6577 3.28555 10.3315 3.28555 10C3.28555 9.66853 3.30705 9.34233 3.34672 9.02588L1.32172 7.42588C1.14589 7.27588 1.09272 7.03005 1.19272 6.82172L2.79272 3.93005C2.89272 3.72172 3.11772 3.61338 3.34272 3.68005L5.69272 4.38005C6.19272 3.99672 6.75105 3.68838 7.35105 3.46338L7.71772 1.03005C7.75105 0.805046 7.94272 0.630046 8.16772 0.630046H11.3677C11.5927 0.630046 11.7844 0.805046 11.8177 1.03005L12.1844 3.46338C12.7844 3.68838 13.3427 3.99672 13.8427 4.38005L16.1927 3.68005C16.4177 3.61338 16.6427 3.72172 16.7427 3.93005L18.3427 6.82172C18.4427 7.03005 18.3896 7.27588 18.2137 7.42588L16.1887 9.02588C16.2284 9.34233 16.25 9.66853 16.25 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="tabs-container">
+      <div class="tabs-header">
+        <h2>Current Tabs</h2>
+        <div class="toggle-container">
+          <label class="toggle">
+            <span class="toggle-label">Auto Group</span>
+            <input type="checkbox" id="auto-group-toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="search-container">
+        <input type="text" id="search-tabs" placeholder="Search tabs...">
+        <button id="clear-search" class="icon-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="prev-tab-btn" class="icon-btn" title="Go to previous tab (Alt+Q)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.6667 12.6667L5.33333 8.00004L10.6667 3.33337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="tabs-list" class="tabs-list">
+        <!-- Tab groups will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <div id="group-management" class="group-management">
+      <div class="group-management-header">
+        <h2>Tab Groups</h2>
+        <button id="add-group-btn" class="icon-btn" title="Add Group">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 3.33334V12.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3.33334 8H12.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div id="groups-list" class="groups-list">
+        <!-- User-defined groups will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Settings Panel (Hidden by default) -->
+    <div id="settings-panel" class="settings-panel hidden">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button id="close-settings" class="icon-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-content">
+        <div class="setting-item">
+          <label for="keyboard-shortcut">Previous Tab Shortcut</label>
+          <div class="shortcut-display">Alt+Q</div>
+        </div>
+        <div class="setting-item">
+          <label for="recent-tabs-count">Recent Tabs Indicator</label>
+          <select id="recent-tabs-count">
+            <option value="3">3 tabs</option>
+            <option value="5">5 tabs</option>
+            <option value="0">Disabled</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Theme</label>
+          <div class="theme-selector">
+            <button class="theme-option active" data-theme="light">Light</button>
+            <button class="theme-option" data-theme="dark">Dark</button>
+            <button class="theme-option" data-theme="system">System</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Group Modal (Hidden by default) -->
+    <div id="add-group-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="group-modal-title">Add New Group</h3>
+          <button id="close-modal" class="icon-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="group-id">
+          <div class="form-group">
+            <label for="group-name">Group Name</label>
+            <input type="text" id="group-name" placeholder="Enter group name">
+          </div>
+          <div class="form-group">
+            <label>Group Color</label>
+            <div class="color-options">
+              <button class="color-option" data-color="grey" style="background-color: #9AA0A6;"></button>
+              <button class="color-option" data-color="blue" style="background-color: #8AB4F8;"></button>
+              <button class="color-option" data-color="red" style="background-color: #F28B82;"></button>
+              <button class="color-option" data-color="yellow" style="background-color: #FDD663;"></button>
+              <button class="color-option" data-color="green" style="background-color: #81C995;"></button>
+              <button class="color-option" data-color="pink" style="background-color: #F8BBD0;"></button>
+              <button class="color-option" data-color="purple" style="background-color: #D7AEFB;"></button>
+              <button class="color-option" data-color="cyan" style="background-color: #78D9EC;"></button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="group-keywords">Keywords (comma separated)</label>
+            <input type="text" id="group-keywords" placeholder="e.g., github, gitlab, bitbucket">
+            <small>Tabs containing these keywords in their domain will be automatically added to this group</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="back-btn" class="btn btn-secondary">Back</button>
+          <div class="modal-footer-right">
+            <button id="delete-group" class="btn btn-danger hidden">Delete</button>
+            <button id="save-group" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/popup.js"></script>
+</body>
+</html>
