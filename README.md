@@ -42,14 +42,8 @@ tabcur/
 2. Reload the extension in Chrome's extensions page
 3. For background script changes, click the "Update" button in extensions page
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This software is proprietary and confidential. Unauthorized copying, modification, distribution, or use of this software, via any medium, is strictly prohibited without the express written permission of Nadav Lichter.
+
+Copyright (c) 2024 Nadav Lichter. All rights reserved. 
