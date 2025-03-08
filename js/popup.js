@@ -136,10 +136,12 @@ function applyTheme(theme) {
  */
 async function loadTabs() {
   try {
-    // Get all tabs from all windows
-    allTabs = await chrome.tabs.query({});
+    // Get all tabs from all windows if we don't have them yet
+    if (allTabs.length === 0) {
+      allTabs = await chrome.tabs.query({});
+    }
 
-    // Try to get recent tabs from storage instead of background page
+    // Try to get recent tabs from storage
     let recentTabs = [];
     try {
       const data = await chrome.storage.local.get('recentTabs');
@@ -149,18 +151,27 @@ async function loadTabs() {
       console.warn('Could not load recent tabs from storage:', storageError);
     }
 
+    // Reset all recent indicators
+    allTabs.forEach(tab => {
+      delete tab.recentIndex;
+    });
+
     // Mark recent tabs
     allTabs.forEach(tab => {
       const recentIndex = recentTabs.indexOf(tab.id);
-      if (recentIndex !== -1 && recentIndex < 3) {
+      if (recentIndex !== -1 && recentIndex < 2) { // Only mark the last 2 tabs
         tab.recentIndex = recentIndex + 1;
         console.log('Marked tab as recent:', tab.id, 'index:', recentIndex + 1, 'title:', tab.title);
       }
     });
 
-    // Initial display with all tabs
-    filteredTabs = [...allTabs];
-    displayTabs(filteredTabs);
+    // Update display with current filter
+    if (searchInput.value) {
+      filterTabs(searchInput.value);
+    } else {
+      filteredTabs = [...allTabs];
+      displayTabs(filteredTabs);
+    }
   } catch (error) {
     console.error('Error loading tabs:', error);
     displayError('Failed to load tabs. Please try again.');
@@ -335,7 +346,14 @@ function createTabElement(tab) {
 
   // Add recent tab indicator class if applicable
   if (tab.recentIndex) {
-    tabElement.classList.add(`recent-${tab.recentIndex}`);
+    const recentClass = `recent-${tab.recentIndex}`;
+    tabElement.classList.add(recentClass);
+    console.log(`Added recent class ${recentClass} to tab:`, {
+      id: tab.id,
+      title: tab.title,
+      recentIndex: tab.recentIndex,
+      classList: tabElement.className
+    });
   }
 
   tabElement.innerHTML = `
@@ -589,13 +607,24 @@ function deleteGroup() {
  * Toggle settings panel
  */
 function toggleSettingsPanel() {
+  console.log('Toggling settings panel');
+  settingsPanel.classList.toggle('hidden');
   settingsPanel.classList.toggle('visible');
+  console.log('Settings panel classes:', settingsPanel.className);
 }
 
 /**
  * Set up event listeners
  */
 function setupEventListeners() {
+  // Add storage change listener
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'local' && changes.recentTabs) {
+      console.log('Recent tabs updated:', changes.recentTabs.newValue);
+      loadTabs(); // Reload tabs to update the UI with new recent tabs
+    }
+  });
+
   // Search input
   searchInput.addEventListener('input', () => {
     filterTabs(searchInput.value);

@@ -257,7 +257,7 @@ input:checked + .toggle-slider:before {
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   border-top: 1px solid var(--border-color);
-  transition: background-color var(--transition-speed);
+  transition: all var(--transition-speed);
   cursor: pointer;
 }
 
@@ -281,15 +281,31 @@ input:checked + .toggle-slider:before {
 /* Recent Tab Indicators */
 .tab-item.recent-1 {
   position: relative;
-  background-color: var(--hover-color);
-  border-left: 4px solid var(--primary-color);
+  background-color: var(--hover-color) !important;
+  border-left: 2px solid var(--primary-color) !important;
+  padding-left: calc(var(--spacing-md) - 2px) !important;
 }
 
 .tab-item.recent-2 {
   position: relative;
-  background-color: var(--surface-color);
-  border-left: 2px solid var(--primary-color);
-  opacity: 0.9;
+  background-color: rgba(var(--primary-color-rgb), 0.05) !important;
+  border-left: 2px solid var(--primary-color) !important;
+  padding-left: calc(var(--spacing-md) - 2px) !important;
+  opacity: 0.95;
+}
+
+/* Hover effect for recent tabs */
+.tab-item.recent-1:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.1) !important;
+}
+
+.tab-item.recent-2:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.08) !important;
+}
+
+/* Regular tab hover */
+.tab-item:hover {
+  background-color: var(--hover-color);
 }
 
 /* Group Management */
@@ -357,10 +373,17 @@ input:checked + .toggle-slider:before {
   transition: transform var(--transition-speed);
   display: flex;
   flex-direction: column;
+  visibility: hidden;
 }
 
 .settings-panel.visible {
   transform: translateX(0);
+  visibility: visible;
+}
+
+.settings-panel.hidden {
+  transform: translateX(100%);
+  visibility: hidden;
 }
 
 .settings-header {
