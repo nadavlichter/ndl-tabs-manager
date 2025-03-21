@@ -1,5 +1,5 @@
 /**
- * TabCur - Advanced Tab Manager
+ * TabToolKit - Advanced Tab Manager
  * popup.js - Handles the popup UI interactions
  */
 

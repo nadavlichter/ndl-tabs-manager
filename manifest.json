@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TabCur - Advanced Tab Manager",
+  "name": "TabToolKit - Advanced Tab Manager",
   "version": "1.0.0",
-  "description": "An elegant, Apple-inspired tab manager with smart grouping and navigation features",
+  "description": "An elegant tab manager with smart grouping and navigation features",
   "permissions": [
     "tabs",
     "storage",
@@ -25,11 +25,17 @@
     "128": "icons/icon128.png"
   },
   "commands": {
-    "navigate-to-previous-tab": {
+    "navigate-tab-backward": {
       "suggested_key": {
-        "default": "Alt+Q"
+        "default": "Alt+Left"
       },
-      "description": "Navigate to previously active tab"
+      "description": "Navigate to previous tab in history"
+    },
+    "navigate-tab-forward": {
+      "suggested_key": {
+        "default": "Alt+Right"
+      },
+      "description": "Navigate to next tab in history"
     }
   }
 }

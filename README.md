@@ -1,6 +1,6 @@
-# TabCur - Advanced Tab Manager for Chrome
+# TabToolKit - Advanced Tab Manager for Chrome
 
-TabCur is an advanced tab management Chrome extension that helps you organize and navigate your tabs efficiently. It provides automatic and manual tab grouping, quick navigation between tabs, and a clean interface to manage your browsing sessions.
+TabToolKit is an advanced tab management Chrome extension that helps you organize and navigate your tabs efficiently. It provides automatic and manual tab grouping, quick navigation between tabs, and a clean interface to manage your browsing sessions.
 
 ## Features
 

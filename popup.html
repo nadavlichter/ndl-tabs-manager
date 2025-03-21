@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TabCur - Advanced Tab Manager</title>
+  <title>TabToolKit - Advanced Tab Manager</title>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap">
@@ -11,7 +11,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>TabCur</h1>
+      <h1>TabToolKit</h1>
       <div class="header-controls">
         <button id="settings-btn" class="icon-btn" title="Settings">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,9 +42,14 @@
             <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <button id="prev-tab-btn" class="icon-btn" title="Go to previous tab (Alt+Q)">
+        <button id="prev-tab-btn" class="icon-btn" title="Go to previous tab (Alt + Left Arrow)">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.6667 12.6667L5.33333 8.00004L10.6667 3.33337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="next-tab-btn" class="icon-btn" title="Go to next tab (Alt + Right Arrow)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.33333 3.33337L10.6667 8.00004L5.33333 12.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
@@ -83,7 +88,9 @@
       <div class="settings-content">
         <div class="setting-item">
           <label for="keyboard-shortcut">Previous Tab Shortcut</label>
-          <div class="shortcut-display">Alt+Q</div>
+          <div class="shortcut-display">Alt + Left Arrow</div>
+          <label for="keyboard-shortcut">Next Tab Shortcut</label>
+          <div class="shortcut-display">Alt + Right Arrow</div>
         </div>
         <div class="setting-item">
           <label for="recent-tabs-count">Recent Tabs Indicator</label>
