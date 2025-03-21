@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to TabToolKit</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f5f5f7;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1d1d1f;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            color: #515154;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .feature-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #1d1d1f;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .shortcut {
+            background: #e8e8e8;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tip {
+            background: #f0f7ff;
+            border-left: 4px solid #0066cc;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #86868b;
+            font-size: 0.9rem;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 0.3em;
+        }
+
+        .example-box {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .example-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-pill {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .steps-list {
+            padding-left: 1.2rem;
+        }
+
+        .steps-list li {
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            background: #fff3dc;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .custom-groups-section {
+            background: #fff;
+            border: 1px solid #e1e1e1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .example-group {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-left: 4px solid;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example-group.work {
+            border-left-color: #ff6b6b;
+        }
+
+        .example-group.shopping {
+            border-left-color: #4ecdc4;
+        }
+
+        .example-group.social {
+            border-left-color: #45b7d1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to TabToolKit</h1>
+
+        <p class="welcome-message">
+            Thank you for installing TabToolKit! Let's get you started with some powerful tab management features.
+        </p>
+
+        <div class="feature-section">
+            <h2><span class="emoji">⚡️</span>Quick Navigation</h2>
+            <p>Navigate through your tab history just like you browse the web:</p>
+            <ul>
+                <li><span class="shortcut">Alt + ←</span> Go to previous tab in history</li>
+                <li><span class="shortcut">Alt + →</span> Go to next tab in history</li>
+            </ul>
+            <div class="tip">
+                <strong>Pro Tip:</strong> On macOS, use <span class="shortcut">Option + ←</span> and <span class="shortcut">Option + →</span>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h2><span class="emoji">🔄</span>Smart Tab History</h2>
+                <p>TabToolKit remembers your tab navigation history, making it easy to switch between recently used tabs.</p>
+            </div>
+
+            <div class="feature-card">
+                <h2><span class="emoji">📚</span>Automatic Grouping</h2>
+                <p>Tabs are automatically organized into groups based on their domains, keeping your browser tidy.</p>
+            </div>
+
+            <div class="feature-card">
+                <h2><span class="emoji">🎨</span>Custom Groups</h2>
+                <p>Create your own tab groups with custom colors and rules for automatic organization.</p>
+            </div>
+
+            <div class="feature-card">
+                <h2><span class="emoji">⚡️</span>Performance</h2>
+                <p>Lightweight and efficient, TabToolKit won't slow down your browsing experience.</p>
+            </div>
+        </div>
+
+        <div class="custom-groups-section">
+            <h2><span class="emoji">✨</span>Custom Groups Guide</h2>
+
+            <p>Custom groups help you organize your tabs automatically based on your needs. Here's how to use them:</p>
+
+            <h3>What are Custom Groups?</h3>
+            <p>Custom groups automatically collect related tabs based on keywords you choose. Here are some examples:</p>
+
+            <div class="example-group work">
+                <h4><span class="color-pill" style="background: #ff6b6b;"></span>Work Group</h4>
+                <p><strong>Keywords:</strong> jira, confluence, github, gitlab, docs.google</p>
+                <p>All your work-related tabs will automatically group together!</p>
+            </div>
+
+            <div class="example-group shopping">
+                <h4><span class="color-pill" style="background: #4ecdc4;"></span>Shopping Group</h4>
+                <p><strong>Keywords:</strong> amazon, ebay, etsy, walmart</p>
+                <p>Keep your shopping tabs organized in one place.</p>
+            </div>
+
+            <div class="example-group social">
+                <h4><span class="color-pill" style="background: #45b7d1;"></span>Social Media</h4>
+                <p><strong>Keywords:</strong> facebook, twitter, instagram, linkedin</p>
+                <p>All social media tabs grouped together.</p>
+            </div>
+
+            <h3>How to Create a Custom Group:</h3>
+            <ol class="steps-list">
+                <li>Click the TabToolKit icon in your browser toolbar</li>
+                <li>Click <span class="highlight">Manage Groups</span> at the bottom of the popup</li>
+                <li>Click <span class="highlight">+ Add New Group</span></li>
+                <li>Fill in:
+                    <ul>
+                        <li><strong>Group Name:</strong> What you want to call your group (e.g., "Work")</li>
+                        <li><strong>Keywords:</strong> Words found in URLs that should go in this group (e.g., "github, jira")</li>
+                        <li><strong>Color:</strong> Pick a color to easily identify your group</li>
+                    </ul>
+                </li>
+                <li>Click <span class="highlight">Save</span></li>
+            </ol>
+
+            <div class="tip">
+                <strong>Pro Tips:</strong>
+                <ul>
+                    <li>Keywords are not case-sensitive - "GitHub" and "github" work the same</li>
+                    <li>Use partial words - "mail" will match "gmail" and "outlook.mail"</li>
+                    <li>Separate keywords with commas</li>
+                    <li>The more specific your keywords, the better the grouping</li>
+                </ul>
+            </div>
+
+            <h3>Example Keywords for Common Groups:</h3>
+            <div class="example-box">
+                <div class="example-label">Work/Projects:</div>
+                github, gitlab, jira, confluence, docs.google, sheets.google, drive.google
+
+                <div class="example-label">Social Media:</div>
+                facebook, twitter, instagram, linkedin, reddit
+
+                <div class="example-label">Email/Communication:</div>
+                gmail, outlook, slack, teams, zoom, meet.google
+
+                <div class="example-label">Shopping:</div>
+                amazon, ebay, etsy, walmart, target, shop
+            </div>
+        </div>
+
+        <div class="feature-section">
+            <h2><span class="emoji">🎯</span>Getting Started</h2>
+            <ol>
+                <li>Start browsing normally and switch between tabs</li>
+                <li>Use <span class="shortcut">Alt + ←</span> to go back to previous tabs</li>
+                <li>Use <span class="shortcut">Alt + →</span> to go forward again</li>
+                <li>Watch as your tabs automatically organize into groups</li>
+            </ol>
+        </div>
+
+        <footer>
+            TabToolKit - Making tab management elegant and efficient
+        </footer>
+    </div>
+</body>
+</html>

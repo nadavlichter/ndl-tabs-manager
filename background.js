@@ -654,5 +654,26 @@ function getColorForDomain(domain) {
   return colors[colorIndex];
 }
 
+// Listen for extension installation or update
+chrome.runtime.onInstalled.addListener((details) => {
+  // Open welcome page on install or update
+  if (details.reason === 'install' || details.reason === 'update') {
+    // Get the welcome page URL
+    const welcomeURL = chrome.runtime.getURL('welcome.html');
+
+    // Check if the welcome page is already open
+    chrome.tabs.query({}, (tabs) => {
+      const welcomeTab = tabs.find(tab => tab.url === welcomeURL);
+      if (!welcomeTab) {
+        // Open the welcome page in a new tab
+        chrome.tabs.create({
+          url: welcomeURL,
+          active: true
+        });
+      }
+    });
+  }
+});
+
 // Initialize the extension when the service worker starts
 initialize();
