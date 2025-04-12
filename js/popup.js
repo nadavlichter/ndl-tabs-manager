@@ -32,6 +32,7 @@ let allTabs = [];
 let filteredTabs = [];
 let selectedColor = 'blue';
 let editingGroupId = null;
+let selectedTabIndex = -1; // Track the currently selected tab index
 
 /**
  * Initialize the popup
@@ -338,11 +339,50 @@ function displayUngroupedTabs(tabs) {
 }
 
 /**
+ * Handle keyboard navigation in the tab list
+ */
+function handleTabNavigation(event) {
+  const tabItems = document.querySelectorAll('.tab-item');
+  if (tabItems.length === 0) return;
+
+  // Remove highlight from previously selected tab
+  if (selectedTabIndex >= 0 && tabItems[selectedTabIndex]) {
+    tabItems[selectedTabIndex].classList.remove('selected');
+  }
+
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault();
+      selectedTabIndex = selectedTabIndex < tabItems.length - 1 ? selectedTabIndex + 1 : 0;
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      selectedTabIndex = selectedTabIndex > 0 ? selectedTabIndex - 1 : tabItems.length - 1;
+      break;
+    case 'Enter':
+      event.preventDefault();
+      if (selectedTabIndex >= 0 && tabItems[selectedTabIndex]) {
+        // Simulate click on the selected tab
+        tabItems[selectedTabIndex].click();
+      }
+      return;
+  }
+
+  // Highlight the newly selected tab
+  if (selectedTabIndex >= 0 && tabItems[selectedTabIndex]) {
+    const selectedTab = tabItems[selectedTabIndex];
+    selectedTab.classList.add('selected');
+    selectedTab.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+/**
  * Create a tab element
  */
 function createTabElement(tab) {
   const tabElement = document.createElement('div');
   tabElement.className = 'tab-item';
+  tabElement.setAttribute('tabindex', '0'); // Make tab focusable
 
   // Add recent tab indicator class if applicable
   if (tab.recentIndex) {
@@ -627,6 +667,7 @@ function setupEventListeners() {
 
   // Search input
   searchInput.addEventListener('input', () => {
+    selectedTabIndex = -1;
     filterTabs(searchInput.value);
   });
 
@@ -726,6 +767,15 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Add keyboard navigation event listener
+  document.addEventListener('keydown', (event) => {
+    // Only handle keyboard navigation when search input is focused or a tab is selected
+    if (document.activeElement === searchInput ||
+        (event.key.startsWith('Arrow') || event.key === 'Enter')) {
+      handleTabNavigation(event);
+    }
+  });
 }
 
 /**
