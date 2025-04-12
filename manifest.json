@@ -27,19 +27,22 @@
   "commands": {
     "navigate-tab-backward": {
       "suggested_key": {
-        "default": "Alt+Left"
+        "default": "Ctrl+Left",
+        "mac": "Command+Left"
       },
       "description": "Navigate to previous tab in history"
     },
     "navigate-tab-forward": {
       "suggested_key": {
-        "default": "Alt+Right"
+        "default": "Ctrl+Right",
+        "mac": "Command+Right"
       },
       "description": "Navigate to next tab in history"
     },
     "open-search": {
       "suggested_key": {
-        "default": "Alt+K"
+        "default": "Ctrl+K",
+        "mac": "Command+K"
       },
       "description": "Open extension and focus search"
     }

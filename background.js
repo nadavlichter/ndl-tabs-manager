@@ -40,7 +40,7 @@ async function initialize() {
     const data = await chrome.storage.local.get(['tabHistory', 'historyPosition']);
     tabHistory = data.tabHistory || [];
     historyPosition = data.historyPosition || 0;
-    console.log('Initialized history state:', { tabHistory, historyPosition });
+    // console.log('Initialized history state:', { tabHistory, historyPosition });
   } catch (error) {
     console.error('Error loading history state:', error);
   }
@@ -58,7 +58,7 @@ async function initialize() {
     console.error('Error saving initial state to storage:', error);
   }
 
-  console.log('TabToolKit extension initialized');
+  // console.log('TabToolKit extension initialized');
 }
 
 /**
@@ -218,21 +218,21 @@ async function handleTabUrlChanged(tabId, tab) {
  * Add a tab to the navigation history
  */
 async function addToHistory(tabId) {
-  console.log('=== Adding tab to history ===');
-  console.log('Tab ID:', tabId);
-  console.log('Before - Position:', historyPosition);
-  console.log('Before - History:', tabHistory);
-  console.log('Is Navigating:', isNavigating);
+  // console.log('=== Adding tab to history ===');
+  // console.log('Tab ID:', tabId);
+  // console.log('Before - Position:', historyPosition);
+  // console.log('Before - History:', tabHistory);
+  // console.log('Is Navigating:', isNavigating);
 
   // If we're navigating through history, don't modify it
   if (isNavigating) {
-    console.log('Skipping history update during navigation');
+    // console.log('Skipping history update during navigation');
     return;
   }
 
   // If we're not at the start of history, remove all entries after current position
   if (historyPosition > 0) {
-    console.log('Truncating history from position', historyPosition);
+    // console.log('Truncating history from position', historyPosition);
     tabHistory = tabHistory.slice(historyPosition);
     historyPosition = 0;
   }
@@ -240,7 +240,7 @@ async function addToHistory(tabId) {
   // Remove this tab if it's already in history
   const existingIndex = tabHistory.indexOf(tabId);
   if (existingIndex !== -1) {
-    console.log('Tab already in history at position:', existingIndex);
+    // console.log('Tab already in history at position:', existingIndex);
     tabHistory.splice(existingIndex, 1);
   }
 
@@ -252,8 +252,8 @@ async function addToHistory(tabId) {
     tabHistory = tabHistory.slice(0, 50);
   }
 
-  console.log('After - Position:', historyPosition);
-  console.log('After - History:', tabHistory);
+  // console.log('After - Position:', historyPosition);
+  // console.log('After - History:', tabHistory);
 
   // Store tab history and position in storage
   try {
@@ -261,7 +261,7 @@ async function addToHistory(tabId) {
       tabHistory,
       historyPosition
     });
-    console.log('=== History state saved ===');
+    // console.log('=== History state saved ===');
   } catch (error) {
     console.error('Error saving tab history to storage:', error);
   }
@@ -290,23 +290,23 @@ async function updateRecentTabs(tabId) {
 
   // Add to the front of the recent tabs
   recentTabs.unshift(tabId);
-  console.log('Added tab to recent tabs:', tabId);
+  // console.log('Added tab to recent tabs:', tabId);
 
   // Get settings to check how many recent tabs to track
   const settings = await loadSettings();
   const count = settings.recentTabsCount || 2;  // Default to 2 if not set
-  console.log('Recent tabs count setting:', count);
+  // console.log('Recent tabs count setting:', count);
 
   // Keep recent tabs at the specified size
   if (recentTabs.length > count) {
     recentTabs = recentTabs.slice(0, count);
   }
-  console.log('Current recent tabs:', recentTabs);
+  // console.log('Current recent tabs:', recentTabs);
 
   // Store recent tabs in storage for the popup to access
   try {
     await chrome.storage.local.set({ recentTabs });
-    console.log('Saved recent tabs to storage');
+    // console.log('Saved recent tabs to storage');
   } catch (error) {
     console.error('Error saving recent tabs to storage:', error);
   }
@@ -330,16 +330,16 @@ async function removeFromRecent(tabId) {
  * Navigate backward in tab history
  */
 async function navigateBackward() {
-  console.log('=== Navigate Backward ===');
-  console.log('Before - Position:', historyPosition);
-  console.log('Before - History:', tabHistory);
+  // console.log('=== Navigate Backward ===');
+  // console.log('Before - Position:', historyPosition);
+  // console.log('Before - History:', tabHistory);
 
   const newPosition = historyPosition + 1;
   if (newPosition < tabHistory.length) {
-    console.log('Moving to position:', newPosition);
+    // console.log('Moving to position:', newPosition);
     await navigateToHistoryPosition(newPosition);
   } else {
-    console.log('Cannot move backward: already at oldest tab');
+    // console.log('Cannot move backward: already at oldest tab');
   }
 }
 
@@ -347,16 +347,16 @@ async function navigateBackward() {
  * Navigate forward in tab history
  */
 async function navigateForward() {
-  console.log('=== Navigate Forward ===');
-  console.log('Before - Position:', historyPosition);
-  console.log('Before - History:', tabHistory);
+  // console.log('=== Navigate Forward ===');
+  // console.log('Before - Position:', historyPosition);
+  // console.log('Before - History:', tabHistory);
 
   const newPosition = historyPosition - 1;
   if (newPosition >= 0) {
-    console.log('Moving to position:', newPosition);
+    // console.log('Moving to position:', newPosition);
     await navigateToHistoryPosition(newPosition);
   } else {
-    console.log('Cannot move forward: already at most recent tab');
+    // console.log('Cannot move forward: already at most recent tab');
   }
 }
 
@@ -364,19 +364,19 @@ async function navigateForward() {
  * Navigate to a specific position in tab history
  */
 async function navigateToHistoryPosition(newPosition) {
-  console.log('=== Navigate To Position ===');
-  console.log('Target position:', newPosition);
-  console.log('Current position:', historyPosition);
-  console.log('History:', tabHistory);
+  // console.log('=== Navigate To Position ===');
+  // console.log('Target position:', newPosition);
+  // console.log('Current position:', historyPosition);
+  // console.log('History:', tabHistory);
 
   // Ensure the new position is within bounds
   if (newPosition < 0 || newPosition >= tabHistory.length) {
-    console.log('Invalid position:', newPosition, 'History length:', tabHistory.length);
+    // console.log('Invalid position:', newPosition, 'History length:', tabHistory.length);
     return;
   }
 
   const targetTabId = tabHistory[newPosition];
-  console.log('Target tab ID:', targetTabId);
+  // console.log('Target tab ID:', targetTabId);
 
   // Check if the tab still exists
   try {
@@ -387,36 +387,36 @@ async function navigateToHistoryPosition(newPosition) {
 
       // First update the history position
       historyPosition = newPosition;
-      console.log('Updated position to:', historyPosition);
+      // console.log('Updated position to:', historyPosition);
 
       // Store the new position immediately
       await chrome.storage.local.set({ historyPosition });
-      console.log('Saved position to storage');
+      // console.log('Saved position to storage');
 
       // Then activate the tab
       await chrome.tabs.update(targetTabId, { active: true });
-      console.log('Activated tab:', targetTabId);
+      // console.log('Activated tab:', targetTabId);
 
       // If the tab is in a different window, focus that window
       if (tab.windowId) {
         await chrome.windows.update(tab.windowId, { focused: true });
-        console.log('Focused window:', tab.windowId);
+        // console.log('Focused window:', tab.windowId);
       }
 
-      console.log('=== Navigation Complete ===');
-      console.log('Final position:', historyPosition);
-      console.log('History:', tabHistory);
+      // console.log('=== Navigation Complete ===');
+      // console.log('Final position:', historyPosition);
+      // console.log('History:', tabHistory);
 
       // Clear navigating flag after a short delay to ensure tab activation event is handled
       setTimeout(() => {
         isNavigating = false;
-        console.log('Navigation flag cleared');
+        // console.log('Navigation flag cleared');
       }, 100);
     }
   } catch (error) {
     console.error('Failed to navigate:', error);
     // Tab doesn't exist anymore, remove it from history
-    console.log('Removing non-existent tab from history:', targetTabId);
+    // console.log('Removing non-existent tab from history:', targetTabId);
     await removeFromHistory(targetTabId);
     // Clear navigating flag
     isNavigating = false;
@@ -503,7 +503,7 @@ async function attemptTabGroupOperation(operation, maxRetries = 3, delay = 500) 
 
       // If this is a "tabs cannot be edited" error, wait and retry
       if (error.message && error.message.includes("Tabs cannot be edited")) {
-        console.log(`Tab grouping failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`);
+        // console.log(`Tab grouping failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         // Increase delay for next attempt
         delay *= 1.5;

@@ -38,11 +38,11 @@ let selectedTabIndex = -1; // Track the currently selected tab index
  * Initialize the popup
  */
 async function initialize() {
-  console.log('Initializing popup');
+  // console.log('Initializing popup');
 
   // Check if DOM elements are properly initialized
-  console.log('addGroupBtn:', addGroupBtn);
-  console.log('addGroupModal:', addGroupModal);
+  // console.log('addGroupBtn:', addGroupBtn);
+  // console.log('addGroupModal:', addGroupModal);
 
   // Load settings
   settings = await loadSettings();
@@ -72,7 +72,7 @@ async function initialize() {
   // Set up event listeners
   setupEventListeners();
 
-  console.log('Popup initialization complete');
+  // console.log('Popup initialization complete');
 }
 
 /**
@@ -147,7 +147,7 @@ async function loadTabs() {
     try {
       const data = await chrome.storage.local.get('recentTabs');
       recentTabs = data.recentTabs || [];
-      console.log('Loaded recent tabs:', recentTabs);
+      // console.log('Loaded recent tabs:', recentTabs);
     } catch (storageError) {
       console.warn('Could not load recent tabs from storage:', storageError);
     }
@@ -162,7 +162,7 @@ async function loadTabs() {
       const recentIndex = recentTabs.indexOf(tab.id);
       if (recentIndex !== -1 && recentIndex < 2) { // Only mark the last 2 tabs
         tab.recentIndex = recentIndex + 1;
-        console.log('Marked tab as recent:', tab.id, 'index:', recentIndex + 1, 'title:', tab.title);
+        // console.log('Marked tab as recent:', tab.id, 'index:', recentIndex + 1, 'title:', tab.title);
       }
     });
 
@@ -388,12 +388,12 @@ function createTabElement(tab) {
   if (tab.recentIndex) {
     const recentClass = `recent-${tab.recentIndex}`;
     tabElement.classList.add(recentClass);
-    console.log(`Added recent class ${recentClass} to tab:`, {
-      id: tab.id,
-      title: tab.title,
-      recentIndex: tab.recentIndex,
-      classList: tabElement.className
-    });
+    // console.log(`Added recent class ${recentClass} to tab:`, {
+    //   id: tab.id,
+    //   title: tab.title,
+    //   recentIndex: tab.recentIndex,
+    //   classList: tabElement.className
+    // });
   }
 
   tabElement.innerHTML = `
@@ -504,7 +504,7 @@ function filterTabs(searchText) {
  * Open the add group modal
  */
 function openAddGroupModal() {
-  console.log('Opening add group modal');
+  // console.log('Opening add group modal');
 
   // Reset form
   groupModalTitle.textContent = 'Add New Group';
@@ -524,10 +524,10 @@ function openAddGroupModal() {
   });
 
   // Show modal
-  console.log('Before: Modal classes:', addGroupModal.className);
+  // console.log('Before: Modal classes:', addGroupModal.className);
   addGroupModal.style.display = 'flex';
   addGroupModal.classList.add('visible');
-  console.log('After: Modal classes:', addGroupModal.className);
+  // console.log('After: Modal classes:', addGroupModal.className);
 
   groupNameInput.focus();
 }
@@ -566,7 +566,7 @@ function openEditGroupModal(group) {
  * Close the group modal
  */
 function closeGroupModal() {
-  console.log('Closing modal');
+  // console.log('Closing modal');
   addGroupModal.classList.remove('visible');
   addGroupModal.style.display = 'none';
 }
@@ -575,7 +575,7 @@ function closeGroupModal() {
  * Save a group
  */
 function saveGroup() {
-  console.log('Saving group');
+  // console.log('Saving group');
   const id = groupIdInput.value || Date.now().toString();
   const name = groupNameInput.value.trim();
   const keywords = groupKeywordsInput.value.trim();
@@ -593,7 +593,7 @@ function saveGroup() {
     keywords: keywords.split(',').map(k => k.trim()).filter(k => k)
   };
 
-  console.log('Group data:', group);
+  // console.log('Group data:', group);
 
   // Update settings
   if (!settings.userGroups) {
@@ -609,7 +609,7 @@ function saveGroup() {
 
   // Save settings
   saveSettings();
-  console.log('Settings saved, userGroups:', settings.userGroups);
+  // console.log('Settings saved, userGroups:', settings.userGroups);
 
   // Reload groups
   loadUserGroups();
@@ -647,10 +647,10 @@ function deleteGroup() {
  * Toggle settings panel
  */
 function toggleSettingsPanel() {
-  console.log('Toggling settings panel');
+  // console.log('Toggling settings panel');
   settingsPanel.classList.toggle('hidden');
   settingsPanel.classList.toggle('visible');
-  console.log('Settings panel classes:', settingsPanel.className);
+  // console.log('Settings panel classes:', settingsPanel.className);
 }
 
 /**
@@ -660,7 +660,7 @@ function setupEventListeners() {
   // Add storage change listener
   chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === 'local' && changes.recentTabs) {
-      console.log('Recent tabs updated:', changes.recentTabs.newValue);
+      // console.log('Recent tabs updated:', changes.recentTabs.newValue);
       loadTabs(); // Reload tabs to update the UI with new recent tabs
     }
   });
@@ -721,7 +721,7 @@ function setupEventListeners() {
 
   // Add group button
   addGroupBtn.addEventListener('click', () => {
-    console.log('Add group button clicked');
+    // console.log('Add group button clicked');
     openAddGroupModal();
   });
 
@@ -829,15 +829,15 @@ async function navigateToPreviousTab() {
 
 // Initialize the popup when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM fully loaded');
+  // console.log('DOM fully loaded');
   initialize();
 
   // Add a direct event listener to the add group button
   const addGroupBtnDirect = document.getElementById('add-group-btn');
   if (addGroupBtnDirect) {
-    console.log('Found add group button directly:', addGroupBtnDirect);
+    // console.log('Found add group button directly:', addGroupBtnDirect);
     addGroupBtnDirect.addEventListener('click', (e) => {
-      console.log('Add group button clicked directly');
+      // console.log('Add group button clicked directly');
       e.stopPropagation();
       openAddGroupModal();
     });
