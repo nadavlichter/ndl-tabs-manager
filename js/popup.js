@@ -794,4 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('Could not find add group button directly');
   }
+
+  // Focus search input when popup opens
+  searchInput.focus();
 });

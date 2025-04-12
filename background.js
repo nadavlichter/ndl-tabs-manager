@@ -129,6 +129,8 @@ function setupEventListeners() {
       navigateBackward();
     } else if (command === 'navigate-tab-forward') {
       navigateForward();
+    } else if (command === 'open-search') {
+      chrome.action.openPopup();
     }
   });
 }

@@ -36,6 +36,12 @@
         "default": "Alt+Right"
       },
       "description": "Navigate to next tab in history"
+    },
+    "open-search": {
+      "suggested_key": {
+        "default": "Alt+K"
+      },
+      "description": "Open extension and focus search"
     }
   }
 }
