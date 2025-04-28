@@ -702,13 +702,54 @@ async function enforceAutoGroupingForWindow(windowId) {
   const minGroupSize = settings.minGroupSize || 2;
   // Get all tabs in the window
   const tabs = await chrome.tabs.query({ windowId });
-  // Group tabs by auto group name
+
+  // 1. Handle user-defined groups with minGroupSize logic
+  const userGroups = settings.userGroups || [];
+  const userGroupTabIds = new Set();
+  for (const group of userGroups) {
+    if (!group.keywords || group.keywords.length === 0) continue;
+    const keywords = Array.isArray(group.keywords) ? group.keywords : group.keywords.split(',').map(k => k.trim());
+    // Find all matching tabs
+    const matchingTabs = tabs.filter(tab => tab.url && keywords.some(keyword => keyword && tab.url.toLowerCase().includes(keyword.toLowerCase())));
+    const tabIds = matchingTabs.map(tab => tab.id);
+    // Track these tab IDs to exclude from auto grouping
+    for (const id of tabIds) userGroupTabIds.add(id);
+    if (tabIds.length >= minGroupSize) {
+      // Find existing group with this name
+      const existingGroups = await chrome.tabGroups.query({ title: group.name, windowId });
+      let groupId = null;
+      if (existingGroups.length > 0) {
+        groupId = existingGroups[0].id;
+      }
+      if (groupId !== null) {
+        await chrome.tabs.group({ tabIds, groupId });
+        await chrome.tabGroups.update(groupId, {
+          title: group.name,
+          color: group.color || 'blue'
+        });
+      } else {
+        const newGroupId = await chrome.tabs.group({ tabIds });
+        await chrome.tabGroups.update(newGroupId, {
+          title: group.name,
+          color: group.color || 'blue'
+        });
+      }
+    } else {
+      // Ungroup all matching tabs
+      if (tabIds.length > 0) {
+        await chrome.tabs.ungroup(tabIds);
+      }
+    }
+  }
+
+  // 2. Group tabs by auto group name, EXCLUDING user-defined group tabs
   const groupsByName = {};
   for (const tab of tabs) {
     // Only consider normal tabs (not chrome://, not extension, not newtab)
     if (!tab.url || tab.url === 'chrome://newtab/' || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
       continue;
     }
+    if (userGroupTabIds.has(tab.id)) continue; // Exclude user group tabs
     const groupName = getAutoGroupName(tab);
     if (!groupsByName[groupName]) groupsByName[groupName] = [];
     groupsByName[groupName].push(tab);
