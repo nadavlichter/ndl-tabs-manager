@@ -145,9 +145,12 @@ function applyTheme(theme) {
  */
 async function loadTabs() {
   try {
-    // Get all tabs from all windows if we don't have them yet
+    // Get all tabs from all windows if we don't have them yet, excluding incognito windows
     if (allTabs.length === 0) {
-      allTabs = await chrome.tabs.query({});
+      const windows = await chrome.windows.getAll({ populate: true });
+      allTabs = windows
+        .filter(window => !window.incognito) // Exclude incognito windows
+        .flatMap(window => window.tabs);
     }
 
     // Try to get recent tabs from storage
@@ -155,7 +158,11 @@ async function loadTabs() {
     try {
       const data = await chrome.storage.local.get('recentTabs');
       recentTabs = data.recentTabs || [];
-      // console.log('Loaded recent tabs:', recentTabs);
+      // Filter out any incognito tabs from recent tabs
+      recentTabs = recentTabs.filter(tabId => {
+        const tab = allTabs.find(t => t.id === tabId);
+        return tab; // Only keep tabs that exist in our non-incognito allTabs array
+      });
     } catch (storageError) {
       console.warn('Could not load recent tabs from storage:', storageError);
     }
@@ -170,7 +177,6 @@ async function loadTabs() {
       const recentIndex = recentTabs.indexOf(tab.id);
       if (recentIndex !== -1 && recentIndex < 2) { // Only mark the last 2 tabs
         tab.recentIndex = recentIndex + 1;
-        // console.log('Marked tab as recent:', tab.id, 'index:', recentIndex + 1, 'title:', tab.title);
       }
     });
 
