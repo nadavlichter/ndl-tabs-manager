@@ -25,6 +25,7 @@ const groupIdInput = document.getElementById('group-id');
 const groupNameInput = document.getElementById('group-name');
 const groupKeywordsInput = document.getElementById('group-keywords');
 const colorOptions = document.querySelectorAll('.color-option');
+const minGroupSizeSelect = document.getElementById('min-group-size');
 
 // State
 let settings = null;
@@ -53,6 +54,7 @@ async function initialize() {
   // Set up UI based on settings
   autoGroupToggle.checked = settings.autoGroupEnabled;
   recentTabsCountSelect.value = settings.recentTabsCount;
+  minGroupSizeSelect.value = settings.minGroupSize || 2;
 
   // Set active theme option
   themeOptions.forEach(option => {
@@ -82,12 +84,17 @@ async function loadSettings() {
   try {
     const data = await chrome.storage.local.get('settings');
     if (data.settings) {
+      // Ensure minGroupSize is set
+      if (typeof data.settings.minGroupSize !== 'number') {
+        data.settings.minGroupSize = 2;
+      }
       return data.settings;
     } else {
       // Default settings
       const defaultSettings = {
         autoGroupEnabled: true,
         recentTabsCount: 3,
+        minGroupSize: 2,
         theme: 'system',
         userGroups: []
       };
@@ -99,6 +106,7 @@ async function loadSettings() {
     return {
       autoGroupEnabled: true,
       recentTabsCount: 3,
+      minGroupSize: 2,
       theme: 'system',
       userGroups: []
     };
@@ -700,6 +708,12 @@ function setupEventListeners() {
   // Recent tabs count select
   recentTabsCountSelect.addEventListener('change', () => {
     settings.recentTabsCount = parseInt(recentTabsCountSelect.value);
+    saveSettings();
+  });
+
+  // Minimum group size select
+  minGroupSizeSelect.addEventListener('change', () => {
+    settings.minGroupSize = parseInt(minGroupSizeSelect.value);
     saveSettings();
   });
 

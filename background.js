@@ -7,6 +7,7 @@
 const DEFAULT_SETTINGS = {
   autoGroupEnabled: true,
   recentTabsCount: 2,
+  minGroupSize: 2,
   theme: 'system',
   userGroups: []
 };
@@ -68,6 +69,10 @@ async function loadSettings() {
   try {
     const data = await chrome.storage.local.get('settings');
     if (data.settings) {
+      // Ensure minGroupSize is set
+      if (typeof data.settings.minGroupSize !== 'number') {
+        data.settings.minGroupSize = 2;
+      }
       return data.settings;
     } else {
       await chrome.storage.local.set({ settings: DEFAULT_SETTINGS });
@@ -117,10 +122,20 @@ function setupEventListeners() {
   });
 
   // Tab removal
-  chrome.tabs.onRemoved.addListener(async (tabId) => {
+  chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     delete tabsCache[tabId];
     await removeFromHistory(tabId);
     await removeFromRecent(tabId);
+    // Enforce auto grouping for the affected window
+    if (removeInfo && removeInfo.windowId !== undefined) {
+      await enforceAutoGroupingForWindow(removeInfo.windowId);
+    } else {
+      // Fallback: check all windows
+      const windows = await chrome.windows.getAll();
+      for (const win of windows) {
+        await enforceAutoGroupingForWindow(win.id);
+      }
+    }
   });
 
   // Commands (keyboard shortcuts)
@@ -175,7 +190,10 @@ async function handleTabActivated(tabId, windowId) {
 
   // Only apply auto grouping if no user group match and auto-grouping is enabled
   if (!matchesUserGroup && settings.autoGroupEnabled) {
-    await checkAndApplyAutoGrouping(tab);
+    // await checkAndApplyAutoGrouping(tab); // REMOVE
+  }
+  if (settings.autoGroupEnabled) {
+    await enforceAutoGroupingForWindow(windowId);
   }
 }
 
@@ -191,11 +209,14 @@ async function handleNewTab(tab) {
   // Get settings to check if auto-grouping is enabled
   const settings = await loadSettings();
   if (settings.autoGroupEnabled) {
-    await checkAndApplyAutoGrouping(tab);
+    // await checkAndApplyAutoGrouping(tab); // REMOVE
   }
 
   // Check if tab matches any user-defined group keywords
   await checkAndApplyUserGrouping(tab);
+  if (settings.autoGroupEnabled) {
+    await enforceAutoGroupingForWindow(tab.windowId);
+  }
 }
 
 /**
@@ -207,11 +228,14 @@ async function handleTabUrlChanged(tabId, tab) {
 
   // Check for auto grouping
   if (settings.autoGroupEnabled) {
-    await checkAndApplyAutoGrouping(tab);
+    // await checkAndApplyAutoGrouping(tab); // REMOVE
   }
 
   // Check for user-defined grouping
   await checkAndApplyUserGrouping(tab);
+  if (settings.autoGroupEnabled) {
+    await enforceAutoGroupingForWindow(tab.windowId);
+  }
 }
 
 /**
@@ -654,6 +678,71 @@ function getColorForDomain(domain) {
   // Get a color from the hash
   const colorIndex = Math.abs(hash) % colors.length;
   return colors[colorIndex];
+}
+
+// Helper: Enforce min group size for all groups in a window
+async function checkAndEnforceMinGroupSize(windowId) {
+  const settings = await loadSettings();
+  const minGroupSize = settings.minGroupSize || 2;
+  // Get all tab groups in the window
+  const groups = await chrome.tabGroups.query({ windowId });
+  for (const group of groups) {
+    // Get all tabs in this group
+    const tabs = await chrome.tabs.query({ windowId, groupId: group.id });
+    if (tabs.length < minGroupSize) {
+      // Ungroup all tabs in this group
+      await chrome.tabs.ungroup(tabs.map(tab => tab.id));
+    }
+  }
+}
+
+// Helper: Enforce auto grouping and min group size for all tabs in a window
+async function enforceAutoGroupingForWindow(windowId) {
+  const settings = await loadSettings();
+  const minGroupSize = settings.minGroupSize || 2;
+  // Get all tabs in the window
+  const tabs = await chrome.tabs.query({ windowId });
+  // Group tabs by auto group name
+  const groupsByName = {};
+  for (const tab of tabs) {
+    // Only consider normal tabs (not chrome://, not extension, not newtab)
+    if (!tab.url || tab.url === 'chrome://newtab/' || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
+      continue;
+    }
+    const groupName = getAutoGroupName(tab);
+    if (!groupsByName[groupName]) groupsByName[groupName] = [];
+    groupsByName[groupName].push(tab);
+  }
+  // For each group, group or ungroup as needed
+  for (const [groupName, groupTabs] of Object.entries(groupsByName)) {
+    if (groupTabs.length >= minGroupSize) {
+      // Find existing group with this name
+      const existingGroups = await chrome.tabGroups.query({ title: groupName, windowId });
+      let groupId = null;
+      if (existingGroups.length > 0) {
+        groupId = existingGroups[0].id;
+      }
+      // Group all tabs (even if already grouped, Chrome API is idempotent)
+      const tabIds = groupTabs.map(tab => tab.id);
+      if (groupId !== null) {
+        await chrome.tabs.group({ tabIds, groupId });
+        await chrome.tabGroups.update(groupId, {
+          title: groupName,
+          color: getColorForDomain(groupName)
+        });
+      } else {
+        const newGroupId = await chrome.tabs.group({ tabIds });
+        await chrome.tabGroups.update(newGroupId, {
+          title: groupName,
+          color: getColorForDomain(groupName)
+        });
+      }
+    } else {
+      // Ungroup all tabs in this group
+      const tabIds = groupTabs.map(tab => tab.id);
+      await chrome.tabs.ungroup(tabIds);
+    }
+  }
 }
 
 // Listen for extension installation or update
