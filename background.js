@@ -202,6 +202,17 @@ function setupEventListeners() {
  * Handle tab activation (when user switches tabs)
  */
 async function handleTabActivated(tabId, windowId) {
+  // Check if this is an incognito window
+  try {
+    const window = await chrome.windows.get(windowId);
+    if (window.incognito) {
+      return; // Skip incognito windows
+    }
+  } catch (error) {
+    console.error('Error checking window type:', error);
+    return;
+  }
+
   // Add to tab history
   await addToHistory(tabId);
 
@@ -238,9 +249,6 @@ async function handleTabActivated(tabId, windowId) {
 
   // Only apply auto grouping if no user group match and auto-grouping is enabled
   if (!matchesUserGroup && settings.autoGroupEnabled) {
-    // await checkAndApplyAutoGrouping(tab); // REMOVE
-  }
-  if (settings.autoGroupEnabled) {
     await enforceAutoGroupingForWindow(windowId);
   }
 }
@@ -249,6 +257,11 @@ async function handleTabActivated(tabId, windowId) {
  * Handle new tab creation
  */
 async function handleNewTab(tab) {
+  // Skip incognito tabs
+  if (tab.incognito) {
+    return;
+  }
+
   // We don't do anything with empty tabs
   if (!tab.url || tab.url === 'chrome://newtab/') {
     return;
@@ -256,9 +269,6 @@ async function handleNewTab(tab) {
 
   // Get settings to check if auto-grouping is enabled
   const settings = await loadSettings();
-  if (settings.autoGroupEnabled) {
-    // await checkAndApplyAutoGrouping(tab); // REMOVE
-  }
 
   // Check if tab matches any user-defined group keywords
   await checkAndApplyUserGrouping(tab);
@@ -271,13 +281,13 @@ async function handleNewTab(tab) {
  * Handle tab URL changes
  */
 async function handleTabUrlChanged(tabId, tab) {
+  // Skip incognito tabs
+  if (tab.incognito) {
+    return;
+  }
+
   // Get settings to check if auto-grouping is enabled
   const settings = await loadSettings();
-
-  // Check for auto grouping
-  if (settings.autoGroupEnabled) {
-    // await checkAndApplyAutoGrouping(tab); // REMOVE
-  }
 
   // Check for user-defined grouping
   await checkAndApplyUserGrouping(tab);
@@ -290,21 +300,24 @@ async function handleTabUrlChanged(tabId, tab) {
  * Add a tab to the navigation history
  */
 async function addToHistory(tabId) {
-  // console.log('=== Adding tab to history ===');
-  // console.log('Tab ID:', tabId);
-  // console.log('Before - Position:', historyPosition);
-  // console.log('Before - History:', tabHistory);
-  // console.log('Is Navigating:', isNavigating);
+  // Check if this is an incognito tab
+  try {
+    const tab = await chrome.tabs.get(tabId);
+    if (tab.incognito) {
+      return; // Skip incognito tabs
+    }
+  } catch (error) {
+    console.error('Error checking tab type:', error);
+    return;
+  }
 
   // If we're navigating through history, don't modify it
   if (isNavigating) {
-    // console.log('Skipping history update during navigation');
     return;
   }
 
   // If we're not at the start of history, remove all entries after current position
   if (historyPosition > 0) {
-    // console.log('Truncating history from position', historyPosition);
     tabHistory = tabHistory.slice(historyPosition);
     historyPosition = 0;
   }
@@ -312,7 +325,6 @@ async function addToHistory(tabId) {
   // Remove this tab if it's already in history
   const existingIndex = tabHistory.indexOf(tabId);
   if (existingIndex !== -1) {
-    // console.log('Tab already in history at position:', existingIndex);
     tabHistory.splice(existingIndex, 1);
   }
 
@@ -324,16 +336,12 @@ async function addToHistory(tabId) {
     tabHistory = tabHistory.slice(0, 50);
   }
 
-  // console.log('After - Position:', historyPosition);
-  // console.log('After - History:', tabHistory);
-
   // Store tab history and position in storage
   try {
     await chrome.storage.local.set({
       tabHistory,
       historyPosition
     });
-    // console.log('=== History state saved ===');
   } catch (error) {
     console.error('Error saving tab history to storage:', error);
   }
@@ -746,6 +754,17 @@ async function checkAndEnforceMinGroupSize(windowId) {
 
 // Helper: Enforce auto grouping and min group size for all tabs in a window
 async function enforceAutoGroupingForWindow(windowId) {
+  // Check if this is an incognito window
+  try {
+    const window = await chrome.windows.get(windowId);
+    if (window.incognito) {
+      return; // Skip incognito windows
+    }
+  } catch (error) {
+    console.error('Error checking window type:', error);
+    return;
+  }
+
   const settings = await loadSettings();
   const minGroupSize = settings.minGroupSize || 2;
   // Get all tabs in the window
