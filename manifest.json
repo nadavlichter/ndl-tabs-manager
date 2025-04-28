@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TabToolKit - The Ultimate Tab Management Solution",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An elegant tab manager with smart grouping and navigation features",
   "permissions": [
     "tabs",

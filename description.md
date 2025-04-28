@@ -5,20 +5,20 @@ Safe for enterprise use, we don't collect any data or browsing history!
 
 ## Key Features
 
-🔹 **Smart Automatic Grouping** - Tabs are instantly organized by domain, keeping related content together
+🔹 **Smart Automatic Grouping** - Tabs are intelligently organized by domain with customizable group size thresholds
 🔹 **Custom Group Rules** - Create your own grouping rules with keywords and color coding
 🔹 **Quick Tab Search** - Easily Search for tabs by title or URL
 🔹 **Multi-Window Support** - Maintain separate organization across different browser windows
 🔹 **Recent Tabs Navigator** - Quickly access your most recently visited tabs without hunting
 🔹 **Previous Tab Navigation** - Seamlessly switch between tabs with intelligent navigation
 🔹 **Theme Support** - Choose between light, dark, or system-matched themes
-🔹 **Fully Customizable** - Configure exactly how you want your tabs organized
+🔹 **Fully Customizable** - Configure group sizes, organization rules, and appearance to match your workflow
 
 ## Why Choose TabToolKit?
 
 ✓ **Private & Safe For Work** - We don't collect any personal data or browsing history!
 ✓ **Save Time** - Find what you need instantly with logical tab organization
-✓ **Reduce Clutter** - No more endless rows of disorganized tabs
+✓ **Reduce Clutter** - Control when tabs get grouped with customizable thresholds
 ✓ **Work Smarter** - Group tabs by project, client, or topic automatically
 ✓ **Cross-Device Sync** - Your organization travels with your Chrome profile
 

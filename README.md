@@ -4,13 +4,13 @@ TabToolKit is an advanced tab management Chrome extension that helps you organiz
 
 ## Features
 
-- **Automatic Tab Grouping**: Automatically groups tabs based on their domains
+- **Automatic Tab Grouping**: Automatically groups tabs based on their domains with configurable minimum group size
 - **Custom Tab Groups**: Create and manage custom tab groups with specific keywords
 - **Multi-Window Support**: Maintain separate tab groups across different windows
 - **Recent Tabs**: Quick access to your recently visited tabs
 - **Previous Tab Navigation**: Easily navigate to previously visited tabs
 - **Theme Support**: Light, dark, and system theme options
-- **Customizable Settings**: Configure grouping behavior and appearance
+- **Customizable Settings**: Configure grouping behavior, minimum group size, and appearance
 
 ## Installation
 
