@@ -22,6 +22,8 @@ let tabsCache = {};
 let historyPosition = 0;
 // Flag to indicate if we're currently navigating
 let isNavigating = false;
+// Track tabs that were just detached and their previous groups
+let detachedTabs = new Map();
 
 /**
  * Initialize the extension
@@ -121,19 +123,55 @@ function setupEventListeners() {
     }
   });
 
+  // Tab detachment (when a tab is being dragged to create a new window)
+  chrome.tabs.onDetached.addListener((tabId, detachInfo) => {
+    const tab = tabsCache[tabId];
+    if (tab && tab.groupId) {
+      // Store the tab's previous group info
+      detachedTabs.set(tabId, {
+        previousGroupId: tab.groupId,
+        timestamp: Date.now()
+      });
+    }
+  });
+
+  // Tab attachment (when a tab is attached to a window)
+  chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
+    const detachedInfo = detachedTabs.get(tabId);
+    if (detachedInfo) {
+      // Clear the detached info immediately to prevent regrouping
+      detachedTabs.delete(tabId);
+
+      // Update the tab's window ID in cache
+      if (tabsCache[tabId]) {
+        tabsCache[tabId].windowId = attachInfo.newWindowId;
+      }
+    } else {
+      // If not a detached tab being reattached, handle normal attachment
+      const tab = tabsCache[tabId];
+      if (tab) {
+        handleTabUrlChanged(tabId, { ...tab, windowId: attachInfo.newWindowId });
+      }
+    }
+  });
+
   // Tab removal
   chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     delete tabsCache[tabId];
+    detachedTabs.delete(tabId);
     await removeFromHistory(tabId);
     await removeFromRecent(tabId);
-    // Enforce auto grouping for the affected window
-    if (removeInfo && removeInfo.windowId !== undefined) {
-      await enforceAutoGroupingForWindow(removeInfo.windowId);
-    } else {
-      // Fallback: check all windows
-      const windows = await chrome.windows.getAll();
-      for (const win of windows) {
-        await enforceAutoGroupingForWindow(win.id);
+
+    // Only enforce grouping for normal tab removal, not during drag operations
+    if (!detachedTabs.has(tabId)) {
+      if (removeInfo && removeInfo.windowId !== undefined) {
+        await enforceAutoGroupingForWindow(removeInfo.windowId);
+      } else {
+        // Fallback: check all windows
+        const windows = await chrome.windows.getAll();
+        for (const win of windows) {
+          await enforceAutoGroupingForWindow(win.id);
+        }
       }
     }
   });
@@ -148,6 +186,16 @@ function setupEventListeners() {
       chrome.action.openPopup();
     }
   });
+
+  // Clean up old detached tab entries periodically
+  setInterval(() => {
+    const now = Date.now();
+    for (const [tabId, info] of detachedTabs.entries()) {
+      if (now - info.timestamp > 30000) { // Remove entries older than 30 seconds
+        detachedTabs.delete(tabId);
+      }
+    }
+  }, 30000);
 }
 
 /**
